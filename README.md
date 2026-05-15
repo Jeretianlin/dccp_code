@@ -98,8 +98,8 @@ npm run dev:server
 然后在另一个终端使用 curl 或 Postman 注册：
 
 ```bash
-curl -X POST http://localhost:3000/api/auth/register \\
-  -H "Content-Type: application/json" \\
+curl -X POST http://localhost:3000/api/auth/register \\\\
+  -H "Content-Type: application/json" \\\\
   -d '{"email":"admin@example.com","password":"admin123","name":"管理员","role":"ADMIN"}'
 ```
 
@@ -190,7 +190,7 @@ data/
 │   └── {hash前2位}/
 │       └── {hash}              # 文件内容
 │
-└── tasks/{task\_id}/
+└── tasks/{task\\\_id}/
     ├── latest/                 # 最新版本
     ├── versions/
     │   ├── v1/
@@ -224,5 +224,5 @@ data/
 
 ## 许可证
 
-MIT目前没有许可证的约束，主要是自己开发自己应用。
+MIT目前没有许可证的约束，主要是自己开发自己应用。 这个是我最新的修改。
 
