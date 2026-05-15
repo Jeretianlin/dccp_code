@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  password_hash String
+  name          String
+  role          String    @default("DESIGNER")
+  avatar        String?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+  deleted_at    DateTime?
+
+  created_tasks  Task[]  @relation("TaskCreator")
+  assigned_tasks Task[]  @relation("TaskAssignee")
+  versions       Version[]
+
+  @@index([deleted_at])
+  @@map("users")
+}
+
+model Project {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  tasks       Task[]
+
+  @@map("projects")
+}
+
+model Task {
+  id                   String     @id @default(uuid())
+  name                 String
+  description          String?
+  requirements         String?
+
+  project_id           String?
+  project              Project?   @relation(fields: [project_id], references: [id])
+
+  parent_task_id       String?
+  parent_task          Task?      @relation("SubTasks", fields: [parent_task_id], references: [id], onDelete: Cascade)
+  sub_tasks            Task[]     @relation("SubTasks")
+
+  assignee_id          String?
+  assignee             User?      @relation("TaskAssignee", fields: [assignee_id], references: [id])
+  creator_id           String
+  creator              User       @relation("TaskCreator", fields: [creator_id], references: [id])
+
+  status               String     @default("NEW")
+  priority             String     @default("MEDIUM")
+
+  created_at           DateTime   @default(now())
+  accepted_at          DateTime?
+  started_at           DateTime?
+  expected_completion  DateTime?
+  completed_at         DateTime?
+
+  watch_directory      String?
+
+  auto_upload_enabled       Boolean    @default(false)
+  auto_upload_interval      String?
+  auto_upload_time          String?
+  auto_upload_day_of_week   Int?
+  auto_upload_every_n_days  Int?
+  next_upload_time          DateTime?
+
+  last_upload_status   String?
+  last_upload_time     DateTime?
+  last_upload_error    String?
+  last_upload_version  Int?
+  last_upload_type     String?
+
+  file_filter_enabled  Boolean  @default(false)
+  file_filter_mode     String?
+  file_filter_rules    String?
+
+  deleted_at           DateTime?
+
+  versions             Version[]
+
+  @@index([assignee_id])
+  @@index([status])
+  @@index([project_id])
+  @@index([deleted_at])
+  @@map("tasks")
+}
+
+model Version {
+  id              String       @id @default(uuid())
+  task_id         String
+  task            Task         @relation(fields: [task_id], references: [id], onDelete: Cascade)
+
+  version_number  Int
+  created_at      DateTime     @default(now())
+  created_by_id   String
+  created_by      User         @relation(fields: [created_by_id], references: [id])
+
+  upload_type     String
+  file_count      Int          @default(0)
+  total_size      BigInt       @default(0)
+  delta_size      BigInt       @default(0)
+
+  storage_path    String
+
+  files           FileRecord[]
+
+  @@unique([task_id, version_number])
+  @@map("versions")
+}
+
+model FileRecord {
+  id             String   @id @default(uuid())
+  version_id     String
+  version        Version  @relation(fields: [version_id], references: [id], onDelete: Cascade)
+
+  relative_path  String
+  file_hash      String
+  file_size      BigInt
+  mime_type      String?
+
+  is_new         Boolean  @default(true)
+  is_changed     Boolean  @default(true)
+
+  created_at     DateTime @default(now())
+
+  @@index([file_hash])
+  @@map("file_records")
+}
+
+model ContentStore {
+  id           String   @id @default(uuid())
+  file_hash    String   @unique
+  storage_path String
+  file_size    BigInt
+  ref_count    Int      @default(1)
+
+  created_at   DateTime @default(now())
+
+  @@map("content_store")
+}
+
+model Share {
+  id            String    @id @default(uuid())
+  task_id       String
+  version_number Int
+  created_by_id String
+  
+  password      String?
+  expires_at    DateTime?
+  
+  download_count Int      @default(0)
+  max_downloads  Int?
+  
+  created_at    DateTime  @default(now())
+  
+  @@index([task_id])
+  @@index([created_by_id])
+  @@map("shares")
+}
+
+model AuditLog {
+  id            String   @id @default(uuid())
+  
+  category      String
+  action        String
+  
+  operator_id   String?
+  operator_name String?
+  
+  target_type   String
+  target_id     String?
+  target_name   String?
+  
+  old_value     String?
+  new_value     String?
+  
+  description   String?
+  
+  created_at    DateTime @default(now())
+  ip_address    String?
+  
+  @@index([category])
+  @@index([operator_id])
+  @@index([target_id])
+  @@index([created_at])
+  @@map("audit_logs")
+}

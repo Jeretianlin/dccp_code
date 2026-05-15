@@ -1,0 +1,9 @@
+{
+  "name": "dccp-server",
+  "bin": "dist/index.js",
+  "targets": ["node18-win-x64"],
+  "outputPath": "build",
+  "assets": [
+    "dist/**/*"
+  ]
+}

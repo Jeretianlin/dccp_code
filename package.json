@@ -1,0 +1,30 @@
+{
+  "name": "dccp",
+  "version": "1.0.0",
+  "description": "Designer Creative Collaboration Platform - 设计师创意协同平台",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "dev:server": "npm run dev --workspace=@dccp/server",
+    "dev:client": "npm run dev --workspace=@dccp/client",
+    "build": "npm run build --workspaces",
+    "db:generate": "npm run db:generate --workspace=@dccp/server",
+    "db:push": "npm run db:push --workspace=@dccp/server",
+    "db:studio": "npm run db:studio --workspace=@dccp/server"
+  },
+  "devDependencies": {
+    "@prisma/client": "^5.22.0",
+    "concurrently": "^8.2.2",
+    "electron": "28.1.0",
+    "get-tsconfig": "^4.13.6",
+    "prisma": "^5.22.0",
+    "typescript": "^5.3.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

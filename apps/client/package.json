@@ -1,0 +1,47 @@
+{
+  "name": "@dccp/client",
+  "version": "1.0.0",
+  "private": true,
+  "main": "./out/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "package": "electron-vite build && electron-builder --dir",
+    "make": "electron-vite build && electron-builder",
+    "pack:zip": "electron-vite build && electron-builder --win zip"
+  },
+  "dependencies": {
+    "@alloc/quick-lru": "^5.2.0",
+    "@dccp/shared": "*",
+    "@electron-toolkit/utils": "^4.0.0",
+    "@remix-run/router": "^1.23.2",
+    "axios": "^1.6.5",
+    "chokidar": "^3.5.3",
+    "electron-store": "^8.1.0",
+    "form-data": "^4.0.0",
+    "node-cron": "^3.0.3",
+    "object-hash": "^3.0.0",
+    "proxy-from-env": "^1.1.0",
+    "react-router": "^7.13.1"
+  },
+  "devDependencies": {
+    "@rolldown/pluginutils": "^1.0.0-beta.27",
+    "@types/node": "^20.10.6",
+    "@types/node-cron": "^3.0.11",
+    "@types/react": "^18.2.46",
+    "@types/react-dom": "^18.2.18",
+    "@vitejs/plugin-react": "^4.2.1",
+    "autoprefixer": "^10.4.16",
+    "electron": "28.1.0",
+    "electron-builder": "^24.9.1",
+    "electron-vite": "^2.0.0",
+    "postcss": "^8.4.33",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.10"
+  }
+}
